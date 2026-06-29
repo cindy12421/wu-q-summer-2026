@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>吳Q 2026暑假全壘打計畫</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Helvetica Neue',Arial,'PingFang TC','Microsoft JhengHei',sans-serif;background:#E8F4FD;min-height:100vh;}
+
+/* HEADER */
+.header{background:linear-gradient(135deg,#4A90E2 0%,#5BB8F5 50%,#87CEEB 100%);padding:0;position:relative;overflow:hidden;}
+.header-stripes{position:absolute;bottom:0;left:0;right:0;height:8px;background:repeating-linear-gradient(90deg,#C41E3A 0px,#C41E3A 24px,#fff 24px,#fff 48px);}
+.header-inner{padding:18px 20px 26px;position:relative;z-index:1;}
+.header-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.header-title-block{display:flex;align-items:center;gap:12px;}
+.baseball-icon{width:48px;height:48px;flex-shrink:0;}
+.header-title h1{font-size:22px;font-weight:900;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,0.2);letter-spacing:1px;}
+.header-title p{font-size:11px;color:rgba(255,255,255,0.85);font-weight:600;letter-spacing:2px;margin-top:2px;}
+.mode-badge{background:rgba(255,255,255,0.25);color:#fff;font-size:12px;font-weight:700;padding:5px 14px;border-radius:20px;border:1.5px solid rgba(255,255,255,0.5);white-space:nowrap;}
+.mode-btns{display:flex;gap:8px;margin-top:14px;}
+.mode-btn{padding:10px 22px;border-radius:22px;border:none;font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;letter-spacing:.5px;}
+.mode-btn.parent{background:#2563EB;color:#fff;box-shadow:0 3px 10px rgba(37,99,235,0.4);}
+.mode-btn.parent.active{background:#1d4ed8;transform:scale(1.04);}
+.mode-btn.child{background:#E07856;color:#fff;box-shadow:0 3px 10px rgba(224,120,86,0.4);}
+.mode-btn.child.active{background:#c0622e;transform:scale(1.04);}
+.mode-btn:hover{filter:brightness(1.1);}
+
+/* TABS */
+.tabs{display:flex;gap:0;background:#C8E6FF;padding:10px 16px 0;border-bottom:3px solid #5BB8F5;}
+.tab-btn{padding:10px 28px;border:none;background:transparent;font-size:15px;font-weight:700;color:#555;cursor:pointer;border-radius:10px 10px 0 0;transition:all .2s;letter-spacing:.5px;}
+.tab-btn.active{background:#fff;color:#2563EB;box-shadow:0 -3px 8px rgba(0,0,0,0.08);border-bottom:3px solid #fff;margin-bottom:-3px;}
+.tab-btn:hover:not(.active){background:rgba(255,255,255,0.5);}
+
+/* MAIN LAYOUT */
+.main-layout{display:flex;gap:14px;padding:14px;align-items:flex-start;}
+.calendar-col{flex:1;min-width:0;}
+.sidebar-col{width:220px;flex-shrink:0;display:flex;flex-direction:column;gap:12px;}
+
+/* CALENDAR */
+.calendar-card{background:#fff;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,0.1);overflow:hidden;}
+.cal-header-row{display:grid;grid-template-columns:repeat(7,1fr);background:#4A90E2;}
+.cal-header-cell{padding:8px 4px;text-align:center;font-size:12px;font-weight:800;color:#fff;}
+.cal-header-cell.sun{color:#FFD0D0;}
+.cal-header-cell.sat{color:#C8E8FF;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);}
+.cal-cell{border:1px solid #E8F0F8;min-height:90px;padding:4px;background:#FAFEFF;vertical-align:top;position:relative;}
+.cal-cell.empty{background:#F5F5F5;}
+.cal-cell.today{border:2.5px solid #E07856;background:#FFF8F5;}
+.cal-cell.sun-col .date-num{color:#C41E3A;}
+.cal-cell.sat-col .date-num{color:#2563EB;}
+.date-num{font-size:12px;font-weight:800;color:#333;margin-bottom:3px;line-height:1;}
+.add-task-btn{display:block;font-size:11px;color:#5BB8F5;cursor:pointer;padding:1px 0;margin-top:3px;background:none;border:none;text-align:left;width:100%;}
+.add-task-btn:hover{color:#2563EB;text-decoration:underline;}
+.add-task-btn.hidden{display:none;}
+
+/* TASK ROWS */
+.task-row{display:flex;align-items:center;gap:0;border-radius:5px;margin-bottom:2px;cursor:pointer;transition:background .15s;min-height:22px;padding:1px 0;}
+.task-row:hover{background:#E8F4FD;}
+.task-row.done{background:#D4EDDA;}
+.task-row.done:hover{background:#C3E6CB;}
+.task-cb{width:16px;height:16px;border:2px solid #7CB342;border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:#fff;margin-right:4px;transition:all .15s;}
+.task-row.done .task-cb{background:#7CB342;border-color:#558B2F;}
+.task-cb-check{font-size:11px;color:#fff;font-weight:900;display:none;}
+.task-row.done .task-cb-check{display:block;}
+.task-text{flex:1;font-size:12px;color:#333;line-height:1.3;word-break:break-all;min-width:0;}
+.task-row.done .task-text{text-decoration:line-through;color:#888;}
+.task-text-edit{flex:1;font-size:12px;border:1px solid #5BB8F5;border-radius:3px;padding:1px 3px;outline:none;background:#FFFDE7;min-width:0;}
+.task-del{background:none;border:none;color:#E07856;font-size:13px;font-weight:900;cursor:pointer;padding:0 2px;flex-shrink:0;line-height:1;display:none;}
+.task-del.visible{display:block;}
+.task-del:hover{color:#C41E3A;}
+
+/* SIDEBAR CARDS */
+.sb-card{background:#fff;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,0.09);overflow:hidden;}
+.sb-card-header{background:linear-gradient(135deg,#4A90E2,#5BB8F5);padding:10px 14px;display:flex;align-items:center;gap:8px;}
+.sb-card-header h3{font-size:13px;font-weight:800;color:#fff;letter-spacing:.5px;}
+.sb-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px;}
+.stat-box{background:#F0F8FF;border-radius:9px;padding:8px 6px;text-align:center;border:1.5px solid #C8E6FF;}
+.stat-val{font-size:20px;font-weight:900;color:#2563EB;line-height:1;}
+.stat-label{font-size:10px;color:#666;margin-top:2px;font-weight:600;}
+.progress-area{padding:0 10px 10px;}
+.progress-label{font-size:11px;color:#555;margin-bottom:4px;font-weight:700;}
+.progress-bar-bg{height:10px;background:#E0E0E0;border-radius:6px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,#7CB342,#A5D6A7);border-radius:6px;transition:width .4s;}
+
+/* BADGES */
+.badges-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px;}
+.badge-item{background:#F5F5F5;border-radius:10px;padding:10px 6px;text-align:center;border:2px solid #E0E0E0;transition:all .3s;}
+.badge-item.earned{background:linear-gradient(135deg,#FFF8DC,#FFFACD);border-color:#FFD700;box-shadow:0 2px 8px rgba(255,200,0,0.3);}
+.badge-icon{font-size:0;margin-bottom:4px;display:flex;justify-content:center;}
+.badge-name{font-size:10px;font-weight:800;color:#888;}
+.badge-item.earned .badge-name{color:#8B6914;}
+.badge-desc{font-size:9px;color:#aaa;margin-top:2px;}
+.badge-item.earned .badge-desc{color:#a07830;}
+
+/* EFFECT OVERLAY */
+.hit-effect{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:48px;font-weight:900;color:#E07856;text-shadow:0 4px 12px rgba(0,0,0,0.3);pointer-events:none;z-index:9999;opacity:0;transition:all .15s;}
+.hit-effect.show{opacity:1;transform:translate(-50%,-60%);}
+
+/* EXPORT AREA */
+.export-area{padding:10px;}
+.export-btn{width:100%;padding:8px;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;margin-bottom:6px;}
+.export-btn.exp{background:#4A90E2;color:#fff;}
+.export-btn.imp{background:#7CB342;color:#fff;}
+.export-btn:hover{filter:brightness(1.1);}
+.import-area{display:none;margin-top:4px;}
+.import-textarea{width:100%;font-size:10px;padding:4px;border:1.5px solid #ccc;border-radius:6px;resize:vertical;min-height:50px;}
+.import-go-btn{width:100%;padding:6px;background:#E07856;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;margin-top:4px;}
+
+/* RESPONSIVE */
+@media(max-width:700px){
+  .main-layout{flex-direction:column;}
+  .sidebar-col{width:100%;}
+  .cal-cell{min-height:70px;}
+  .task-text{font-size:11px;}
+}
+</style>
+</head>
+<body>
+
+<!-- HIT EFFECT -->
+<div class="hit-effect" id="hitEffect">HOME RUN!</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-top">
+      <div class="header-title-block">
+        <svg class="baseball-icon" viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="24" r="22" fill="#FFF8DC" stroke="#C41E3A" stroke-width="2"/>
+          <path d="M8 18 C12 14, 18 12, 24 14 C30 16, 36 14, 40 18" stroke="#C41E3A" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M8 30 C12 34, 18 36, 24 34 C30 32, 36 34, 40 30" stroke="#C41E3A" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <line x1="14" y1="16" x2="12" y2="20" stroke="#C41E3A" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="34" y1="16" x2="36" y2="20" stroke="#C41E3A" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="14" y1="32" x2="12" y2="28" stroke="#C41E3A" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="34" y1="32" x2="36" y2="28" stroke="#C41E3A" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <div class="header-title">
+          <h1>吳Q 2026暑假全壘打計畫</h1>
+          <p>Summer Baseball Grand Slam Plan 2026</p>
+        </div>
+      </div>
+      <div class="mode-badge" id="modeBadge">目前模式：家長模式</div>
+    </div>
+    <div class="mode-btns">
+      <button class="mode-btn parent active" onclick="setMode('parent')">家長模式</button>
+      <button class="mode-btn child" onclick="setMode('child')">吳Q模式</button>
+    </div>
+  </div>
+  <div class="header-stripes"></div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="setMonth(6)" id="tab6">六月</button>
+  <button class="tab-btn" onclick="setMonth(7)" id="tab7">七月</button>
+  <button class="tab-btn" onclick="setMonth(8)" id="tab8">八月</button>
+</div>
+
+<!-- MAIN -->
+<div class="main-layout">
+  <div class="calendar-col">
+    <div class="calendar-card">
+      <div class="cal-header-row">
+        <div class="cal-header-cell sun">日</div>
+        <div class="cal-header-cell">一</div>
+        <div class="cal-header-cell">二</div>
+        <div class="cal-header-cell">三</div>
+        <div class="cal-header-cell">四</div>
+        <div class="cal-header-cell">五</div>
+        <div class="cal-header-cell sat">六</div>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+  </div>
+  <div class="sidebar-col">
+    <!-- SCOREBOARD -->
+    <div class="sb-card">
+      <div class="sb-card-header">
+        <svg width="16" height="16" viewBox="0 0 16 16"><rect x="1" y="6" width="14" height="8" rx="2" fill="rgba(255,255,255,0.8)"/><rect x="3" y="4" width="10" height="2" rx="1" fill="rgba(255,255,255,0.6)"/><text x="8" y="12" text-anchor="middle" font-size="6" fill="#2563EB" font-weight="bold">SCORE</text></svg>
+        <h3>計分板</h3>
+      </div>
+      <div class="sb-stats-grid">
+        <div class="stat-box"><div class="stat-val" id="statDone">0</div><div class="stat-label">完成任務</div></div>
+        <div class="stat-box"><div class="stat-val" id="statStreak">0</div><div class="stat-label">連勝天數</div></div>
+        <div class="stat-box"><div class="stat-val" id="statBadge">0</div><div class="stat-label">獲得徽章</div></div>
+        <div class="stat-box"><div class="stat-val" id="statRate">0%</div><div class="stat-label">完成率</div></div>
+      </div>
+      <div class="progress-area">
+        <div class="progress-label">暑假整體進度</div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <!-- BADGES -->
+    <div class="sb-card">
+      <div class="sb-card-header">
+        <svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="rgba(255,255,255,0.8)" stroke="rgba(255,255,255,0.5)" stroke-width="1"/><text x="8" y="11" text-anchor="middle" font-size="8" fill="#DAA520" font-weight="bold">★</text></svg>
+        <h3>獎勵徽章</h3>
+      </div>
+      <div class="badges-grid" id="badgesGrid"></div>
+    </div>
+
+    <!-- EXPORT -->
+    <div class="sb-card">
+      <div class="sb-card-header">
+        <svg width="16" height="16" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="2" fill="rgba(255,255,255,0.8)"/><line x1="8" y1="5" x2="8" y2="11" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/><line x1="5" y1="8" x2="11" y2="8" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/></svg>
+        <h3>備份存檔</h3>
+      </div>
+      <div class="export-area">
+        <button class="export-btn exp" onclick="exportData()">匯出進度</button>
+        <button class="export-btn imp" onclick="toggleImport()">匯入進度</button>
+        <div class="import-area" id="importArea">
+          <textarea class="import-textarea" id="importText" placeholder="貼上備份碼..."></textarea>
+          <button class="import-go-btn" onclick="importData()">確認匯入</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ DATA ============
+var currentMode = 'parent';
+var currentMonth = 6;
+var today = new Date();
+var todayY = today.getFullYear(), todayM = today.getMonth()+1, todayD = today.getDate();
+
+// Month start weekdays (0=Sun): Jun1=Mon(1), Jul1=Wed(3), Aug1=Sat(6)
+var monthInfo = {
+  6:{startDay:1, days:30, name:'六月', emoji:'六月'},
+  7:{startDay:3, days:31, name:'七月', emoji:'七月'},
+  8:{startDay:6, days:31, name:'八月', emoji:'八月'}
+};
+
+// Default tasks: key = "MONTH-DAY", value = array
+var defaultTasks = {
+  // June
+  '6-2':[{id:'t1',text:'暑假作業開始',done:false}],
+  '6-5':[{id:'t2',text:'卓越盃閱讀',done:false}],
+  '6-8':[{id:'t3',text:'奧數舉一反三',done:false}],
+  '6-12':[{id:'t4',text:'英文課',done:false}],
+  '6-15':[{id:'t5',text:'練球',done:false}],
+  '6-19':[{id:'t6',text:'圖書館日',done:false}],
+  '6-22':[{id:'t7',text:'英文課',done:false}],
+  '6-26':[{id:'t8',text:'練球',done:false}],
+  '6-29':[{id:'t9',text:'圖書館日',done:false}],
+  // July
+  '7-6':[{id:'t10',text:'棒球育樂營(芭里國小)',done:false}],
+  '7-7':[{id:'t11',text:'海外青年英語服務營',done:false}],
+  '7-9':[{id:'t12',text:'U10比賽(三重)',done:false}],
+  '7-13':[{id:'t13',text:'卓越盃(小一國數)',done:false}],
+  '7-15':[{id:'t14',text:'奧數舉一反三(小一)',done:false}],
+  '7-17':[{id:'t15',text:'閱讀日',done:false}],
+  '7-20':[{id:'t16',text:'戶外Fun-台北科教館',done:false}],
+  '7-22':[{id:'t17',text:'龍潭雄獅文具想像力',done:false}],
+  '7-27':[{id:'t18',text:'閱讀日',done:false}],
+  // August
+  '8-3':[{id:'t19',text:'卓越盃模擬考',done:false}],
+  '8-6':[{id:'t20',text:'U8比賽(台中)',done:false}],
+  '8-10':[{id:'t21',text:'大巨蛋看棒球(猿VS龍)',done:false}],
+  '8-13':[{id:'t22',text:'做點心時間',done:false}],
+  '8-17':[{id:'t23',text:'預習二年級',done:false}],
+  '8-20':[{id:'t24',text:'圖書館日',done:false}],
+  '8-24':[{id:'t25',text:'桌遊時間',done:false}],
+  '8-27':[{id:'t26',text:'預習二年級',done:false}],
+  '8-31':[{id:'t27',text:'暑假收尾整理',done:false}]
+};
+
+// tasks storage: key="M-D", value=array of {id,text,done}
+var tasks = {};
+var idCounter = 100;
+
+function genId(){return 'task_'+(++idCounter)+'_'+Date.now();}
+
+function initTasks(){
+  var saved = localStorage.getItem('wuq2026tasks');
+  if(saved){try{tasks=JSON.parse(saved);}catch(e){tasks={}; loadDefaults();} }
+  else{tasks={}; loadDefaults();}
+}
+
+function loadDefaults(){
+  for(var k in defaultTasks){
+    tasks[k] = defaultTasks[k].map(function(t){return {id:genId(),text:t.text,done:false};});
+  }
+}
+
+function saveTasks(){
+  try{localStorage.setItem('wuq2026tasks',JSON.stringify(tasks));}catch(e){}
+}
+
+function getKey(m,d){return m+'-'+d;}
+
+function getTasksForDay(m,d){
+  var k=getKey(m,d);
+  if(!tasks[k]) tasks[k]=[];
+  return tasks[k];
+}
+
+// ============ BADGES ============
+var badges = [
+  {id:'homerun', name:'全壘打', desc:'完成10個任務', threshold:10, icon:'hr'},
+  {id:'mvp',     name:'MVP',   desc:'完成25個任務', threshold:25, icon:'mvp'},
+  {id:'shutout', name:'完封',   desc:'連勝7天',      threshold:7,  icon:'su', streak:true},
+  {id:'strikeout',name:'三振王',desc:'完成50個任務', threshold:50, icon:'sk'}
+];
+
+function getBadgeEarned(b){
+  var total = getTotalDone();
+  var streak = getStreak();
+  if(b.streak) return streak >= b.threshold;
+  return total >= b.threshold;
+}
+
+// ============ STATS ============
+function getTotalDone(){
+  var c=0;
+  for(var k in tasks){
+    var arr=tasks[k];
+    for(var i=0;i<arr.length;i++) if(arr[i].done) c++;
+  }
+  return c;
+}
+function getTotalTasks(){
+  var c=0;
+  for(var k in tasks){c+=tasks[k].length;}
+  return c;
+}
+function getStreak(){
+  // count consecutive days with at least 1 task done going back from today
+  var streak=0;
+  var d=new Date(todayY,todayM-1,todayD);
+  for(var i=0;i<90;i++){
+    var m=d.getMonth()+1, day=d.getDate();
+    if(m<6||m>8){d.setDate(d.getDate()-1);continue;}
+    var k=getKey(m,day);
+    var arr=tasks[k]||[];
+    var hasDone=arr.some(function(t){return t.done;});
+    if(hasDone) streak++;
+    else if(i>0) break;
+    d.setDate(d.getDate()-1);
+  }
+  return streak;
+}
+
+function updateStats(){
+  var done=getTotalDone(), total=getTotalTasks(), streak=getStreak();
+  var rate=total>0?Math.round(done/total*100):0;
+  var earnedBadges=badges.filter(function(b){return getBadgeEarned(b);}).length;
+  document.getElementById('statDone').textContent=done;
+  document.getElementById('statStreak').textContent=streak;
+  document.getElementById('statBadge').textContent=earnedBadges;
+  document.getElementById('statRate').textContent=rate+'%';
+  document.getElementById('progressFill').style.width=rate+'%';
+  renderBadges();
+}
+
+// ============ RENDER BADGES ============
+function renderBadges(){
+  var g=document.getElementById('badgesGrid');
+  g.innerHTML='';
+  badges.forEach(function(b){
+    var earned=getBadgeEarned(b);
+    var div=document.createElement('div');
+    div.className='badge-item'+(earned?' earned':'');
+    div.innerHTML='<div class="badge-icon">'+getBadgeSVG(b.icon,earned)+'</div><div class="badge-name">'+b.name+'</div><div class="badge-desc">'+b.desc+'</div>';
+    g.appendChild(div);
+  });
+}
+
+function getBadgeSVG(icon,earned){
+  var c=earned?'#DAA520':'#BBBBBB';
+  var bg=earned?'#FFF8DC':'#F0F0F0';
+  if(icon==='hr') return '<svg width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="'+bg+'" stroke="'+c+'" stroke-width="2"/><line x1="8" y1="24" x2="24" y2="8" stroke="'+c+'" stroke-width="3" stroke-linecap="round"/><circle cx="24" cy="8" r="3" fill="'+c+'"/><line x1="8" y1="22" x2="8" y2="26" stroke="'+c+'" stroke-width="2.5" stroke-linecap="round"/></svg>';
+  if(icon==='mvp') return '<svg width="32" height="32" viewBox="0 0 32 32"><polygon points="16,4 20,12 29,12 22,18 25,27 16,21 7,27 10,18 3,12 12,12" fill="'+c+'"/></svg>';
+  if(icon==='su') return '<svg width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="'+bg+'" stroke="'+c+'" stroke-width="2"/><path d="M10 20 Q16 10 22 20" stroke="'+c+'" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="10" cy="20" r="2" fill="'+c+'"/><circle cx="22" cy="20" r="2" fill="'+c+'"/></svg>';
+  return '<svg width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="'+bg+'" stroke="'+c+'" stroke-width="2"/><line x1="11" y1="8" x2="11" y2="24" stroke="'+c+'" stroke-width="3" stroke-linecap="round"/><line x1="21" y1="8" x2="21" y2="24" stroke="'+c+'" stroke-width="3" stroke-linecap="round"/><line x1="11" y1="16" x2="21" y2="16" stroke="'+c+'" stroke-width="2" stroke-linecap="round"/></svg>';
+}
+
+// ============ RENDER CALENDAR ============
+function renderCalendar(){
+  var grid=document.getElementById('calGrid');
+  grid.innerHTML='';
+  var info=monthInfo[currentMonth];
+  var startDay=info.startDay; // 0=Sun
+  var totalDays=info.days;
+
+  // empty cells before
+  for(var e=0;e<startDay;e++){
+    var empty=document.createElement('div');
+    empty.className='cal-cell empty';
+    grid.appendChild(empty);
+  }
+
+  for(var d=1;d<=totalDays;d++){
+    var dow=(startDay+d-1)%7;
+    var cell=document.createElement('div');
+    var isToday=(todayY===2026&&todayM===currentMonth&&todayD===d);
+    var cls='cal-cell';
+    if(isToday) cls+=' today';
+    if(dow===0) cls+=' sun-col';
+    if(dow===6) cls+=' sat-col';
+    cell.className=cls;
+    cell.id='cell_'+currentMonth+'_'+d;
+
+    var dayTasks=getTasksForDay(currentMonth,d);
+    var dateDiv=document.createElement('div');
+    dateDiv.className='date-num';
+    dateDiv.textContent=d;
+    cell.appendChild(dateDiv);
+
+    // task list
+    var taskList=document.createElement('div');
+    taskList.id='tasklist_'+currentMonth+'_'+d;
+    dayTasks.forEach(function(task,idx){
+      taskList.appendChild(buildTaskRow(task,currentMonth,d));
+    });
+    cell.appendChild(taskList);
+
+    // add button
+    var addBtn=document.createElement('button');
+    addBtn.className='add-task-btn'+(currentMode==='child'?' hidden':'');
+    addBtn.id='addbtn_'+currentMonth+'_'+d;
+    addBtn.textContent='+ 新增任務';
+    (function(month,day){
+      addBtn.onclick=function(e){e.stopPropagation();addTask(month,day);};
+    })(currentMonth,d);
+    cell.appendChild(addBtn);
+
+    grid.appendChild(cell);
+  }
+
+  // fill trailing empty cells
+  var used=(startDay+totalDays);
+  var trailing=(7-used%7)%7;
+  for(var t=0;t<trailing;t++){
+    var empty2=document.createElement('div');
+    empty2.className='cal-cell empty';
+    grid.appendChild(empty2);
+  }
+
+  updateStats();
+}
+
+function buildTaskRow(task,month,day){
+  var row=document.createElement('div');
+  row.className='task-row'+(task.done?' done':'');
+  row.id='row_'+task.id;
+
+  // checkbox
+  var cb=document.createElement('div');
+  cb.className='task-cb';
+  var check=document.createElement('span');
+  check.className='task-cb-check';
+  check.textContent='✓';
+  cb.appendChild(check);
+
+  // text
+  var txt=document.createElement('span');
+  txt.className='task-text';
+  txt.textContent=task.text;
+  txt.id='txt_'+task.id;
+
+  // del button
+  var del=document.createElement('button');
+  del.className='task-del'+(currentMode==='parent'?' visible':'');
+  del.textContent='✕';
+  del.title='刪除';
+
+  // events
+  (function(t,m,d){
+    row.onclick=function(e){
+      if(e.target===del) return;
+      toggleTask(t,m,d);
+    };
+    if(currentMode==='parent'){
+      txt.onclick=function(e){
+        e.stopPropagation();
+        startEdit(t,m,d);
+      };
+    }
+    del.onclick=function(e){
+      e.stopPropagation();
+      deleteTask(t,m,d);
+    };
+  })(task,month,day);
+
+  row.appendChild(cb);
+  row.appendChild(txt);
+  row.appendChild(del);
+  return row;
+}
+
+// ============ TASK OPERATIONS ============
+function toggleTask(task,month,day){
+  task.done=!task.done;
+  saveTasks();
+  if(task.done) showHitEffect();
+  // re-render row
+  var row=document.getElementById('row_'+task.id);
+  if(row){
+    var parent=row.parentNode;
+    var newRow=buildTaskRow(task,month,day);
+    parent.replaceChild(newRow,row);
+  }
+  updateStats();
+}
+
+function deleteTask(task,month,day){
+  var k=getKey(month,day);
+  tasks[k]=tasks[k].filter(function(t){return t.id!==task.id;});
+  saveTasks();
+  var row=document.getElementById('row_'+task.id);
+  if(row) row.parentNode.removeChild(row);
+  updateStats();
+}
+
+function addTask(month,day){
+  var text=prompt('新增任務：');
+  if(!text||!text.trim()) return;
+  var k=getKey(month,day);
+  if(!tasks[k]) tasks[k]=[];
+  var newTask={id:genId(),text:text.trim(),done:false};
+  tasks[k].push(newTask);
+  saveTasks();
+  var tl=document.getElementById('tasklist_'+month+'_'+day);
+  if(tl) tl.appendChild(buildTaskRow(newTask,month,day));
+  updateStats();
+}
+
+function startEdit(task,month,day){
+  var txt=document.getElementById('txt_'+task.id);
+  if(!txt) return;
+  var input=document.createElement('input');
+  input.className='task-text-edit';
+  input.value=task.text;
+  input.onclick=function(e){e.stopPropagation();};
+  input.onkeydown=function(e){
+    if(e.key==='Enter'){finishEdit(task,month,day,input.value);}
+    if(e.key==='Escape'){cancelEdit(task,month,day);}
+  };
+  input.onblur=function(){finishEdit(task,month,day,input.value);};
+  var row=document.getElementById('row_'+task.id);
+  row.replaceChild(input,txt);
+  input.focus();input.select();
+}
+
+function finishEdit(task,month,day,val){
+  if(val&&val.trim()) task.text=val.trim();
+  saveTasks();
+  var row=document.getElementById('row_'+task.id);
+  if(row){
+    var parent=row.parentNode;
+    var newRow=buildTaskRow(task,month,day);
+    parent.replaceChild(newRow,row);
+  }
+}
+
+function cancelEdit(task,month,day){
+  finishEdit(task,month,day,task.text);
+}
+
+// ============ HIT EFFECT ============
+function showHitEffect(){
+  var msgs=['HOME RUN!','GREAT HIT!','STRIKE!','NICE!','BOOM!'];
+  var el=document.getElementById('hitEffect');
+  el.textContent=msgs[Math.floor(Math.random()*msgs.length)];
+  el.classList.add('show');
+  setTimeout(function(){el.classList.remove('show');},700);
+}
+
+// ============ MODE ============
+function setMode(m){
+  currentMode=m;
+  document.getElementById('modeBadge').textContent='目前模式：'+(m==='parent'?'家長模式':'吳Q模式');
+  document.querySelector('.mode-btn.parent').className='mode-btn parent'+(m==='parent'?' active':'');
+  document.querySelector('.mode-btn.child').className='mode-btn child'+(m==='child'?' active':'');
+  renderCalendar();
+}
+
+// ============ MONTH TABS ============
+function setMonth(m){
+  currentMonth=m;
+  [6,7,8].forEach(function(x){
+    document.getElementById('tab'+x).className='tab-btn'+(x===m?' active':'');
+  });
+  renderCalendar();
+}
+
+// ============ EXPORT/IMPORT ============
+function exportData(){
+  var data=JSON.stringify(tasks);
+  var b64=btoa(unescape(encodeURIComponent(data)));
+  var out=document.getElementById('importText');
+  document.getElementById('importArea').style.display='block';
+  out.value=b64;
+  out.select();
+  try{document.execCommand('copy');alert('備份碼已複製到剪貼簿！');}catch(e){alert('請手動複製上方備份碼');}
+}
+
+function toggleImport(){
+  var area=document.getElementById('importArea');
+  area.style.display=area.style.display==='none'||area.style.display===''?'block':'none';
+  if(area.style.display==='block') document.getElementById('importText').value='';
+}
+
+function importData(){
+  var val=document.getElementById('importText').value.trim();
+  if(!val){alert('請貼上備份碼');return;}
+  try{
+    var json=decodeURIComponent(escape(atob(val)));
+    var parsed=JSON.parse(json);
+    tasks=parsed;
+    saveTasks();
+    renderCalendar();
+    alert('匯入成功！');
+    document.getElementById('importArea').style.display='none';
+  }catch(e){alert('備份碼無效，請確認後再試');}
+}
+
+// ============ INIT ============
+initTasks();
+renderCalendar();
+</script>
+</body>
+</html>
